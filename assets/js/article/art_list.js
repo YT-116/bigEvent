@@ -124,30 +124,35 @@ $(function() {
 
     //通过代理的形式，为删除按钮绑定点击事件处理函数
     $('tbody').on('click', '.btn-delete', function() {
-        //查询页面有多少个删除按钮
-        var len = $('.btn-delete').length
-            //获取文章的id
-        var id = $(this).attr('data-id')
-            //询问是否要删除数据
-        layer.confirm('确认删除', { icon: 3, title: '提示' }, function(index) {
-            $.ajax({
-                method: 'get',
-                url: '/my/article/delete/' + id,
-                success: function(res) {
-                    if (res.status !== 0) {
-                        return layer.msg('删除失败')
+            //查询页面有多少个删除按钮
+            var len = $('.btn-delete').length
+                //获取文章的id
+            var id = $(this).attr('data-id')
+                //询问是否要删除数据
+            layer.confirm('确认删除', { icon: 3, title: '提示' }, function(index) {
+                $.ajax({
+                    method: 'get',
+                    url: '/my/article/delete/' + id,
+                    success: function(res) {
+                        if (res.status !== 0) {
+                            return layer.msg('删除失败')
+                        }
+                        layer.msg('删除成功')
+                        if (len === 1) {
+                            //如果len的值等于1，证明删除完毕之后，页面就没有任何数据了
+                            //但是页面的num最小为1
+                            q.pagenum = q.pagenum === 1 ? 1 : q.pagenum - 1
+                        }
+                        initTable()
                     }
-                    layer.msg('删除成功')
-                    if (len === 1) {
-                        //如果len的值等于1，证明删除完毕之后，页面就没有任何数据了
-                        //但是页面的num最小为1
-                        q.pagenum = q.pagenum === 1 ? 1 : q.pagenum - 1
-                    }
-                    initTable()
-                }
+                })
+                layer.close(index)
             })
-            layer.close(index)
         })
+        //通过代理的形式为编辑按钮绑定点击事件
+    $('tbody').on('click', '.btn-edit', function() {
+        // alert('ok')
+        location.href = 'art_pub.html'
     })
 
 })
